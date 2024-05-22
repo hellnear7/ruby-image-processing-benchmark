@@ -20,6 +20,7 @@ class RackAppBad
     raise "Bad input" unless input =~ /^[0-9]+$/
 
     # ....
+  end
 end
 
 bad = RackAppBad.new
