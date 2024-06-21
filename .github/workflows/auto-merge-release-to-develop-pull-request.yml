@@ -17,8 +17,8 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
-          branch: main
+          base: main
+          branch: develop
           title: 'Automated PR from release to develop'
           body: |
             This is an automated pull request created because changes were merged into the release branch.
