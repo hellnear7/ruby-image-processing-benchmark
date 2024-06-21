@@ -66,3 +66,5 @@ Memory usage by libvips:
   Total allocated: 8907 bytes
   Total retained: 0 bytes
 ```
+
+test
