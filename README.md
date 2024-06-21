@@ -67,4 +67,4 @@ Memory usage by libvips:
   Total retained: 0 bytes
 ```
 
-test
+test hogehoge
