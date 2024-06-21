@@ -12,25 +12,36 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: develop
+
+      - name: Reset branch
+        run: |
+          git fetch origin main:main
+          git reset --hard main
 
       - name: Create Pull Request
+        id: create_pr
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
           branch: main
           title: 'Automated PR from release to develop'
           body: |
             This is an automated pull request created because changes were merged into the release branch.
 
+      - name: Get the PR URL
+        run: echo "PR_URL=${{ steps.create_pr.outputs.pull_request_url }}"
+
       - name: Enable auto-merge for merge PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
+          PR_URL: ${{ steps.create_pr.outputs.pull_request_url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Approve a PR
         run: gh pr review --approve "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
+          PR_URL: ${{ steps.create_pr.outputs.pull_request_url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
