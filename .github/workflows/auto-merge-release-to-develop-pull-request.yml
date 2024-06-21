@@ -5,10 +5,15 @@ on:
     branches:
       - main
 
+permissions:
+  pull-requests: write
+  issues: write
+  repository-projects: write
+  contents: write
+
 jobs:
   create-pull-request:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,22 +31,22 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
+          branch: merge-main-to-develop
           title: 'Automated PR from release to develop'
           body: |
             This is an automated pull request created because changes were merged into the release branch.
 
       - name: Get the PR URL
-        run: echo "PR_URL=${{ steps.create_pr.outputs.pull_request_url }}"
+        run: echo "PR_URL=${{ steps.create_pr.outputs.pull-request-url }}"
 
       - name: Enable auto-merge for merge PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{ steps.create_pr.outputs.pull_request_url }}
+          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Approve a PR
         run: gh pr review --approve "$PR_URL"
         env:
-          PR_URL: ${{ steps.create_pr.outputs.pull_request_url }}
+          PR_URL: ${{ steps.create_pr.outputs.pull-request-url }}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
